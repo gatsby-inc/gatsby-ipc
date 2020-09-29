@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "lib": [
+      "dom",
+      "es5",
+      "es2015",
+      "es2016.array.include",
+      "esnext.asynciterable",
+      "es2017.object"
+    ]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/**/__tests__"]
+}
