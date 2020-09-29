@@ -1,10 +1,10 @@
 {
   "name": "gatsby-build-ipc",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/index.js",
   "license": "MIT",
   "bin": {
-    "build": "./bin/index.js"
+    "build-ipc": "./bin/index.js"
   },
   "devDependencies": {
     "@types/node": "^14.11.2",
