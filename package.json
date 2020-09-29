@@ -1,10 +1,10 @@
 {
-  "name": "gatsby-build-ipc",
-  "version": "1.0.7",
+  "name": "gatsby-ipc",
+  "version": "1.0.8",
   "main": "dist/index.js",
   "license": "MIT",
   "bin": {
-    "build-ipc": "./bin/index.js"
+    "gatsby-ipc": "./bin/index.js"
   },
   "devDependencies": {
     "@types/node": "^14.11.2",
@@ -14,5 +14,9 @@
   "scripts": {
     "build": "tsc",
     "release": "yarn build && yarn publish"
+  },
+  "dependencies": {
+    "execa": "^4.0.3",
+    "sade": "^1.7.4"
   }
 }
