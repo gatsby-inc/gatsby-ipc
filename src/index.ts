@@ -19,7 +19,7 @@ function jobHandler(msg, proc) {
 
   setTimeout(() => {
     proc.send({
-      type: "JOB_COMPLETED",
+      type: "JOB_NOT_WHITELISTED",
       payload: {
         id: msg.payload.id,
         result: {},
