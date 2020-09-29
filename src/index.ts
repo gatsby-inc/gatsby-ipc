@@ -2,16 +2,20 @@ import * as path from "path";
 import { spawn } from "child_process";
 
 export function run() {
-  const proc = spawn(path.join(`runner-command`), [], {
-    // settings for streams are as follows: [stdin, stdout, stderr(, ipc)]
-    stdio: [`pipe`, `pipe`, `pipe`, `ipc`],
-    detached: true,
-    cwd: process.cwd(),
+  const proc = spawn(
+    path.join(__dirname, "..", "bin", "./runner-command"),
+    [],
+    {
+      // settings for streams are as follows: [stdin, stdout, stderr(, ipc)]
+      stdio: [`pipe`, `pipe`, `pipe`, `ipc`],
+      detached: true,
+      cwd: process.cwd(),
 
-    env: {
-      ...process.env,
-    },
-  });
+      env: {
+        ...process.env,
+      },
+    }
+  );
 
   proc.stderr.on(`data`, (buf) => {
     let log = buf.toString();
