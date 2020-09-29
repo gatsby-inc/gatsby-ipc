@@ -12,6 +12,22 @@ function registerSigInt(proc) {
   });
 }
 
+const jobs = new Map();
+
+function jobHandler(msg, proc) {
+  console.log(`PROCESSING ${msg.payload.name} (${msg.payload.id})`);
+
+  setTimeout(() => {
+    proc.send({
+      type: "JOB_COMPLETED",
+      payload: {
+        id: msg.payload.id,
+        result: {},
+      },
+    });
+  }, 1000);
+}
+
 function createCommand(cmd) {
   const proc = execa.node(
     path.join(process.cwd(), "./node_modules/gatsby-cli/lib/index.js"),
@@ -41,7 +57,11 @@ function createCommand(cmd) {
     console.log(err);
   });
 
-  proc.on("message", (data) => {
+  proc.on("message", (data: any) => {
+    if (data.type === "JOB_CREATED") {
+      jobHandler(data, proc);
+    }
+
     console.log(`STRUCTURED DATA`, data);
   });
 
