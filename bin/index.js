@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-const { run } = require("../dist");
+const { cli } = require("../dist");
 
-run();
+cli.parse(process.argv);

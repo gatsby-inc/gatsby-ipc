@@ -1,18 +1,26 @@
 import * as path from "path";
-import { spawn } from "child_process";
+import * as execa from "execa";
+import * as sade from "sade";
 
-export function run() {
-  const proc = spawn(
-    path.join(__dirname, "..", "bin", "./runner-command"),
-    [],
+const prog = sade(`gatsby-ipc`);
+
+prog.version(require("../package.json").version);
+
+function registerSigInt(proc) {
+  process.on("SIGINT", () => {
+    proc.kill();
+  });
+}
+
+function createCommand(cmd) {
+  const proc = execa.node(
+    path.join(process.cwd(), "./node_modules/gatsby-cli/lib/index.js"),
+    [cmd],
     {
-      // settings for streams are as follows: [stdin, stdout, stderr(, ipc)]
-      stdio: [`pipe`, `pipe`, `pipe`, `ipc`],
-      detached: true,
       cwd: process.cwd(),
-
+      stdio: ["pipe", "pipe", "pipe", "ipc"],
       env: {
-        ...process.env,
+        ENABLE_GATSBY_EXTERNAL_JOBS: "true",
       },
     }
   );
@@ -22,18 +30,42 @@ export function run() {
 
     console.log(`ERROR`, log);
   });
+
   proc.stdout.on(`data`, (buf) => {
     let log = buf.toString();
 
     console.log(`LOG`, log);
   });
 
+  proc.on("error", (err) => {
+    console.log(err);
+  });
+
   proc.on("message", (data) => {
     console.log(`STRUCTURED DATA`, data);
   });
 
-  proc.on(`exit`, (data) => {
-    console.log(data);
-    proc.kill();
-  });
+  return proc;
 }
+
+prog
+  .command("build")
+  .describe(`Gatsby Build`)
+  .action(async () => {
+    const proc = createCommand(`build`);
+
+    await proc;
+  })
+  .command("develop")
+  .describe(`Gatsby Develop`)
+  .action(async () => {
+    const proc = createCommand(`develop`);
+
+    proc.on("exit", () => {
+      console.log("exit");
+    });
+
+    registerSigInt(proc);
+  });
+
+export const cli = prog;

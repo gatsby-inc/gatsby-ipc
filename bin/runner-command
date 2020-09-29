@@ -1,9 +1,0 @@
-#!/bin/bash
-
-echo "Node version $(node --version)"
-
-GATSBY="${pwd}node_modules/.bin/gatsby"
-
-echo "Gatsby version $(${GATSBY} --version)"
-
-${GATSBY} build
