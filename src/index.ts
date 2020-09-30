@@ -1,8 +1,12 @@
 import * as path from "path";
 import * as execa from "execa";
 import * as sade from "sade";
+import { inspect } from "util";
 
 const prog = sade(`gatsby-ipc`);
+
+const formatPayload = (payload) =>
+  inspect(payload, { depth: Infinity, colors: true });
 
 prog.version(require("../package.json").version);
 
@@ -62,7 +66,7 @@ function createCommand(cmd) {
       jobHandler(data, proc);
     }
 
-    console.log(`STRUCTURED DATA`, data);
+    console.log(`STRUCTURED DATA`, formatPayload(data));
   });
 
   return proc;
